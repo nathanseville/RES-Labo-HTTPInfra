@@ -22,3 +22,28 @@
 
 *Run*: `docker run -p 3000:3000 -d res/dynamichttp`
 
+
+
+## Step 3: Reverse proxy with apache (static configuration)
+
+> Dockerized apache reverse proxy with static configuration based on `php:5.6-apache` image. Sites configuration can be found in `conf/`. Any files located in `conf/` will be copied on container to `/etc/apache2`. There is two sites configured on the reverse proxy, the default one does nothing. The second one will transmit `/api/trains/` requests to the `dynamic http server`, all others to the `static http sever`.
+>
+> The static configuration of the reverse proxy is: 
+>
+> - `172.17.0.2` for the static http
+> - `172.17.0.3` for the dynamic http
+
+
+
+Before running the reverse proxy, start the `static` and `dynamic` http server.
+
+```bash
+docker run -d res/statichttp
+docker run -d res/dynamichttp
+```
+
+
+
+*Build*: `docker build -t res/rp .`
+
+*Run*: `docker run -p 8080:80 res/rp`
