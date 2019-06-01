@@ -47,3 +47,10 @@ docker run -d res/dynamichttp
 *Build*: `docker build -t res/rp .`
 
 *Run*: `docker run -p 8080:80 res/rp`
+
+
+
+## Step 4: AJAX requests with JQuery
+
+> We have now ajax request on our website, request are made from our brand new script `train.js`. Each 2 seconds a new train is displayed on front-page. Trains array are logged in console, reverse proxy is necessary as the dynamic server isn't located on the same server of the website and browser block script request going to a different domain from the one it comes for security reason *(same origin policy)*.
+
