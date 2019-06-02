@@ -54,3 +54,25 @@ docker run -d res/dynamichttp
 
 > We have now ajax request on our website, request are made from our brand new script `train.js`. Each 2 seconds a new train is displayed on front-page. Trains array are logged in console, reverse proxy is necessary as the dynamic server isn't located on the same server of the website and browser block script request going to a different domain from the one it comes for security reason *(same origin policy)*.
 
+
+
+## Step 5: Dynamic reverse proxy configuration
+
+> Our dockerized apache reverse proxy takes now the static and dynamic app ip address from the environements variables, respectively `STATIC_APP` and `DYNAMIC_APP`. Those environements variables can be pass as argument when running the container with docker with the `-e` option. The `.conf` is built with a template `php` file before runing apache, the `apache2-foreground` script has been modified for this purposes (the line before `exec apache2 -DFOREGROUND "$@"`).
+
+
+
+Before running the reverse proxy, start the `static` and `dynamic` http server.
+
+```bash
+docker run -d res/statichttp
+docker run -d res/dynamichttp
+```
+
+
+
+*Build*: `docker build -t res/rp .`
+
+*Run*: `docker run -d -e DYNAMIC_APP=<ip>:3000 -e STATIC_APP=<ip>:80 -p 8080:80 res/rp`
+
+> Replace the `<ip>` fields by the ip address of the correcponding container (dynamic or static).
