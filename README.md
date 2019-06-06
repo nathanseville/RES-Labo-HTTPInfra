@@ -89,7 +89,7 @@ You can know reach your infrastructure in any browser at `lab.demo.res`.
 
 
 
-### Load balancing: multiple server nodes
+## Load balancing: multiple server nodes
 
 > Our dockerized apache reverse proxy can now take multiple static and dynamic ip separated by a `,` in the docker `-e` argument. The requests will be reparted between the servers by the load balancer, there is a cluster for the static app and one for the dynamic one.
 
@@ -108,4 +108,6 @@ You can know reach your infrastructure in any browser at `lab.demo.res`.
 
 
 The script `run-reverse.sh` starts 5 static, 5 dynamic servers and configure proxy/loadbalancer to use those servers.
+
+For validation purposes, the server name wich has served the website or the one who has served the actual dynamic data is written on the website.
 
