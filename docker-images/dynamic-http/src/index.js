@@ -4,6 +4,8 @@ var chance = new Chance();
 var express = require('express');
 var app = new express();
 
+var ip = require("ip");
+
 app.get('/', function(req, res) {
     res.send(greatfunction());
 });
@@ -42,5 +44,8 @@ function greatfunction() {
         });
     }
 
-    return trains;
+    return {
+        trains: trains,
+        ip: ip.address()
+    };
 }

@@ -1,13 +1,32 @@
 <?php
-    $dynamic = getenv('DYNAMIC_APP');
-    $static = getenv('STATIC_APP');
+    $dynamics = explode(",", getenv('DYNAMIC_APP'));
+    $statics = explode(",", getenv('STATIC_APP'));
 ?>
+
 <VirtualHost *:80>
     ServerName lab.res.ch
 
-    ProxyPass '/api/trains/' 'http://<?php print "$dynamic" ?>/'
-    ProxyPassReverse '/api/trains/' 'http://<?php print "$dynamic" ?>/'
+    <Proxy balancer://dynamic-cluster>
 
-    ProxyPass '/' 'http://<?php print "$static" ?>/'
-    ProxyPassReverse '/' 'http://<?php print "$static" ?>/'
+    <?php foreach($dynamics as $dynamic): ?>
+        BalancerMember 'http://<?= $dynamic ?>'
+    <?php endforeach; ?>
+
+    </Proxy>
+
+    <Proxy balancer://static-cluster>
+
+    <?php foreach($statics as $static): ?>
+        BalancerMember 'http://<?= $static ?>'
+    <?php endforeach; ?>
+
+    </Proxy>
+
+    ProxyPreserveHost On
+
+    ProxyPass '/api/trains/' 'balancer://dynamic-cluster/'
+    ProxyPassReverse '/api/trains/' 'balancer://dynamic-cluster/'
+
+    ProxyPass '/' 'balancer://static-cluster/'
+    ProxyPassReverse '/' 'balancer://static-cluster/'
 </VirtualHost>

@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "chance": "^1.0.18",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "ip": "^1.1.5"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
