@@ -12,7 +12,7 @@ staticHosts=""
 
 for i in {0..5}
 do
-    dynamicName=$(docker run -d --name dynamic-$i res/dynamichttp)
+    dynamicName=$(docker run -d --name dynamic-$i -e NAME=dynamic-$i res/dynamichttp)
     dynamicIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $dynamicName)
     dynamicHosts+="$dynamicIP:$dynamicPort,"
 done
@@ -22,7 +22,7 @@ echo
 
 for i in {0..4}
 do
-    staticName=$(docker run -d --name static-$i res/statichttp)
+    staticName=$(docker run -d --name static-$i -e NAME=static-$i res/statichttp)
     staticIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $staticName)
     staticHosts+="$staticIP:$staticPort,"
 done

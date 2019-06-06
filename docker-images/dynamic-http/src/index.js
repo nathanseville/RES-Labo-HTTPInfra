@@ -46,6 +46,7 @@ function greatfunction() {
 
     return {
         trains: trains,
-        ip: ip.address()
+        ip: ip.address(),
+        name: process.env.NAME
     };
 }

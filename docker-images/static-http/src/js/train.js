@@ -2,7 +2,7 @@ $(function() {
     function loadTrains() {
         $.getJSON("/api/trains/", function(data) {
             trains = data.trains;
-            
+
             console.log("Served by ", data.ip)
             console.log(trains);
 
@@ -12,7 +12,7 @@ $(function() {
             }
 
             $(".trains").text(message);
-            $(".ip").text(data.ip);
+            $(".ip").text(data.ip + " - " + data.name);
         });
     };
 

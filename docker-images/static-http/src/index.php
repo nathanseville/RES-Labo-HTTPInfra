@@ -55,7 +55,7 @@
   <!-- Header -->
   <header class="masthead d-flex">
     <div class="container text-center my-auto">
-      <h1 class="mb-1">Beautiful</h1>
+      <h1 class="mb-1"><?= getenv('NAME') ?> is Beautiful</h1>
       <h3 class="mb-5">
         <em>Really nice</em>
       </h3>
