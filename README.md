@@ -87,3 +87,25 @@ To reach the reverse proxy edit your `/etc/hosts` and add an entry as following:
 
 You can know reach your infrastructure in any browser at `lab.demo.res`.
 
+
+
+### Load balancing: multiple server nodes
+
+> Our dockerized apache reverse proxy can now take multiple static and dynamic ip separated by a `,` in the docker `-e` argument. The requests will be reparted between the servers by the load balancer, there is a cluster for the static app and one for the dynamic one.
+
+
+
+*Build*: `docker build -t res/rp .`
+
+*Run*: `docker run -d -e DYNAMIC_APP=<ip>:3000 -e STATIC_APP=<ip>:80 -p 8080:80 res/rp`
+
+> Replace the `<ip>` fields by the ip address of the correcponding container (dynamic or static).
+>
+> Multiple `<ip>:port` can be set for `DYNAMIC_APP` either `STATIC_APP` by seperating the field by a `,`.
+>
+> e.g. `-e DYNAMIC_APP=<ip>:3000,<ip>:3000,<ip>:3000`
+
+
+
+The script `run-reverse.sh` starts 5 static, 5 dynamic servers and configure proxy/loadbalancer to use those servers.
+
