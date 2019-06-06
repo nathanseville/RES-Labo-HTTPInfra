@@ -76,3 +76,14 @@ docker run -d res/dynamichttp
 *Run*: `docker run -d -e DYNAMIC_APP=<ip>:3000 -e STATIC_APP=<ip>:80 -p 8080:80 res/rp`
 
 > Replace the `<ip>` fields by the ip address of the correcponding container (dynamic or static).
+
+
+
+To reach the reverse proxy edit your `/etc/hosts` and add an entry as following:
+
+```
+<docker network ip>				lab.demo.res
+```
+
+You can know reach your infrastructure in any browser at `lab.demo.res`.
+
