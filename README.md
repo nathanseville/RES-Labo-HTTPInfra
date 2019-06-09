@@ -111,3 +111,34 @@ The script `run-reverse.sh` starts 5 static, 5 dynamic servers and configure pro
 
 For validation purposes, the server name wich has served the website or the one who has served the actual dynamic data is written on the website.
 
+
+## Load balancing: round-robin vs sticky sessions
+
+> Our loadbalencer can now stick a session to a specific server. On the first request the request proxy asign a server to the user. The server is stored in a cookie.
+
+### Proof
+
+To prove that the sticky sessions are working, we displayed the serving server on the webpage. We can see that the serving server isn't changing reloads upon reloads. 
+
+The ip and name of the dynamic server is also displayed after each ajax request alowing us to see the server name and ip changing between requests.   
+
+### Config
+
+The sticky sessions require two more apache modules `lbmethod_byrequests` and `headers`. They have been added in the Docker file.
+
+We modified the apache config adding configuration for sticky sessions.
+The following line add a cookie, is is used to attach a server to a session:
+```
+Header add Set-Cookie "ROUTEID=.%{BALANCER_WORKER_ROUTE}e; path=/" env=BALANCER_ROUTE_CHANGED
+```
+
+Each balancer member must be named to match the session with it. The property `route` of `BalancerMember` allow us to name the server:
+```
+BalancerMember 'http://<?= $static ?>' route=static-<?= $i ?>
+```
+
+The `ProxPass` configuration for static has been modified to add the cookie name used to store the server name. In our case the name is **ROUTEID**
+```
+ProxyPass '/' 'balancer://static-cluster/' stickysession=ROUTEID
+```
+
