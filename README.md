@@ -147,9 +147,21 @@ ProxyPass '/' 'balancer://static-cluster/' stickysession=ROUTEID
 
 We created a new container to manage the cluster. The management is done with nodejs.
 
-Each running http server (dynamic and static) sends an heartbeat every second. The heartbeat is send via UDP multicast. The static servers use the apache module `heartbeat`. This module sends a heartbeat every second, the message contains informations about the server load. The dynamyic servers use a nodejs UDP server that multicast the server name.
+Each running http server (dynamic and static) sends a heartbeat every second. The heartbeat is send via UDP multicast. The static servers use the apache module `heartbeat`. This module sends a heartbeat every second, the message contains informations about the server load. The dynamyic servers use a nodejs UDP server that multicast the server name.
 
 The management container listen for both heartbeat types. Two maps are used to store the currently availible servers. The maps uses the ip as a key and the last seen timestamp as a value. The maps are checked regularly to check if a server has timed out. If between two checks a map changes the script `apache2-config` is run on the proxy server using dockerode exec. This script update the pools settings and reload the apache server. 
+
+The proxy don't need environement variable anymore.
+```bash
+docker run -d --name proxy -p 8080:80 res/rp
+```
+
+To run the manager container you can use the following command:
+```bash
+docker run -d --name proxy-manager -v /var/run/docker.sock:/var/run/docker.sock res/rpmanager
+```
+The `-v` param bind the docker socket with the container. This allow the container to manage docker with dockerode.
+
 
 ### Proof
 
