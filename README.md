@@ -176,3 +176,34 @@ For the satic server it's hard to test because the session is linked to a specfi
 We can create a new dynamic server with an unused name and wait to see it in an AJAX request.
 
 ## Management UI
+
+The management UI is based on express and dockerode. The proxy-manager container has been reused, we extended the node server with a small web app using express. The web UI allows you to start more static/dynamic containers or stop them.
+You can also see all running containers in three table. One for Dynamic containers, one for Static containers and one for Other (like managment containers or load balancer)
+
+The container can be started with the following command:
+```bash
+docker run -i --name proxy-manager -v /var/run/docker.sock:/var/run/docker.sock -p 1234:1234  res/rpmanager
+```
+
+The web interface can be accessed locally in your browser:
+```
+http://localhost:1234/
+```
+
+Custom API routes:
+
+`/containers`
+
+Get all containers in three arrays: other, static and dynamic
+
+`/stop/{container_id}`
+
+Stop the container with the id `container_id`
+
+`/add/dynamic`
+
+Start a dynamic http web server
+
+`/add/dynamic`
+
+Start a static http web server
