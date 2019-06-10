@@ -114,7 +114,7 @@ For validation purposes, the server name wich has served the website or the one 
 
 ## Load balancing: round-robin vs sticky sessions
 
-> Our loadbalencer can now stick a session to a specific server. On the first request the request proxy asign a server to the user. The server is stored in a cookie.
+> Our loadbalencer can now stick a session to a specific server. On the first request the reverse proxy asign a server to the user. The server is stored in a cookie.
 
 ### Proof
 
@@ -127,7 +127,7 @@ The ip and name of the dynamic server is also displayed after each ajax request 
 The sticky sessions require two more apache modules `lbmethod_byrequests` and `headers`. They have been added in the Docker file.
 
 We modified the apache config adding configuration for sticky sessions.
-The following line add a cookie, is is used to attach a server to a session:
+The following line add a cookie, is used to attach a server to a session:
 ```
 Header add Set-Cookie "ROUTEID=.%{BALANCER_WORKER_ROUTE}e; path=/" env=BALANCER_ROUTE_CHANGED
 ```
