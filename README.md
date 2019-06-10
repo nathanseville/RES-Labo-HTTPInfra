@@ -145,11 +145,11 @@ ProxyPass '/' 'balancer://static-cluster/' stickysession=ROUTEID
 
 ## Dynamic cluster management
 
-We created a new container to manage the cluster. The management is done with nodejs.
+> We've created a new container to manage the cluster. The management is done with nodejs.
 
-Each running http server (dynamic and static) sends a heartbeat every second. The heartbeat is send via UDP multicast. The static servers use the apache module `heartbeat`. This module sends a heartbeat every second, the message contains informations about the server load. The dynamyic servers use a nodejs UDP server that multicast the server name.
-
-The management container listen for both heartbeat types. Two maps are used to store the currently availible servers. The maps uses the ip as a key and the last seen timestamp as a value. The maps are checked regularly to check if a server has timed out. If between two checks a map changes the script `apache2-config` is run on the proxy server using dockerode exec. This script update the pools settings and reload the apache server. 
+> Each running http server (dynamic and static) sends a heartbeat every second. The heartbeat is sent via UDP multicast. The static servers use the apache module `heartbeat`. This module sends a heartbeat every second, the message contains informations about the server load. The dynamyic servers use a nodejs UDP server that multicast the server name.
+> 
+> The management container listen for both heartbeat types. Two maps are used to store the currently availible servers. The maps uses the ip as a key and the last seen timestamp as a value. The maps are checked regularly to check if a server has timed out. If between two checks a map changes the script `apache2-config` is run on the proxy server using dockerode exec. This script update the pools settings and reload the apache server. 
 
 The proxy don't need environement variable anymore.
 ```bash
@@ -177,8 +177,8 @@ We can create a new dynamic server with an unused name and wait to see it in an 
 
 ## Management UI
 
-The management UI is based on express and dockerode. The proxy-manager container has been reused, we extended the node server with a small web app using express. The web UI allows you to start more static/dynamic containers or stop them.
-You can also see all running containers in three table. One for Dynamic containers, one for Static containers and one for Other (like managment containers or load balancer)
+> The management UI is based on express and dockerode. The proxy-manager container has been reused, we extended the node server with a small web app using express. The web UI allows you to start more static/dynamic containers or stop them.
+You can also see all running containers in three tables. One for Dynamic containers, one for Static containers and one for Other (like managment containers or load balancer)
 
 The container can be started with the following command:
 ```bash
@@ -192,18 +192,10 @@ http://localhost:1234/
 
 Custom API routes:
 
-`/containers`
+`/containers` Get all containers in three arrays: other, static and dynamic
 
-Get all containers in three arrays: other, static and dynamic
+`/stop/{container_id}` Stop the container with the id `container_id`
 
-`/stop/{container_id}`
+`/add/dynamic` Start a dynamic http web server
 
-Stop the container with the id `container_id`
-
-`/add/dynamic`
-
-Start a dynamic http web server
-
-`/add/dynamic`
-
-Start a static http web server
+`/add/static` Start a static http web server
