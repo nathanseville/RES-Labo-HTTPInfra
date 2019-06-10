@@ -1,6 +1,6 @@
 const ip = require("ip");
 const Docker = require('dockerode');
-const Heartbeat = require('./heartbeat.js');
+const Heartbeat = require('./ClusterManager.js');
 
 const docker = new Docker({socketPath: '/var/run/docker.sock'});
 
