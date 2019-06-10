@@ -174,3 +174,5 @@ The same can be done for a dynamic server, but as the session isn't linked with 
 For the satic server it's hard to test because the session is linked to a specfic server. To check if the added server is working we can clear cookies after each requests until we have found the new server.
 
 We can create a new dynamic server with an unused name and wait to see it in an AJAX request.
+
+## Management UI
