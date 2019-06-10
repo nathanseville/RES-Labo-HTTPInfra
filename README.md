@@ -142,3 +142,23 @@ The `ProxPass` configuration for static has been modified to add the cookie name
 ProxyPass '/' 'balancer://static-cluster/' stickysession=ROUTEID
 ```
 
+
+## Dynamic cluster management
+
+We created a new container to manage the cluster. The management is done with nodejs.
+
+Each running http server (dynamic and static) sends an heartbeat every second. The heartbeat is send via UDP multicast. The static servers use the apache module `heartbeat`. This module sends a heartbeat every second, the message contains informations about the server load. The dynamyic servers use a nodejs UDP server that multicast the server name.
+
+The management container listen for both heartbeat types. Two maps are used to store the currently availible servers. The maps uses the ip as a key and the last seen timestamp as a value. The maps are checked regularly to check if a server has timed out. If between two checks a map changes the script `apache2-config` is run on the proxy server using dockerode exec. This script update the pools settings and reload the apache server. 
+
+### Proof
+
+**A server died:**:
+To check the behaviour when a server die we can use the docker command kill. For example if the server liked with the current session is static-2 we can kill it and see if after the page reload the responding server is different.
+
+The same can be done for a dynamic server, but as the session isn't linked with a secific server we must wait a few ajax request to see if the server isn't used.
+
+**A server has been added:**
+For the satic server it's hard to test because the session is linked to a specfic server. To check if the added server is working we can clear cookies after each requests until we have found the new server.
+
+We can create a new dynamic server with an unused name and wait to see it in an AJAX request.

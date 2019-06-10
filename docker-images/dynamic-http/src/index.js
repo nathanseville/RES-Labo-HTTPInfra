@@ -5,6 +5,14 @@ var express = require('express');
 var app = new express();
 
 var ip = require("ip");
+var dgram = require('dgram'); 
+
+
+// Heartbeatconfig
+const PORT = 27998;
+const MCAST_ADDR = "239.0.0.1";
+
+heartbeat();
 
 app.get('/', function(req, res) {
     res.send(greatfunction());
@@ -49,4 +57,20 @@ function greatfunction() {
         ip: ip.address(),
         name: process.env.NAME
     };
+}
+
+function heartbeat(){
+    var server = dgram.createSocket("udp4"); 
+    server.bind(PORT, function(){
+        server.setBroadcast(true);
+        server.setMulticastTTL(128);
+        server.addMembership(MCAST_ADDR);
+    });
+    
+    setInterval(broadcastNew, 1000);
+    
+    function broadcastNew() {
+        var message = new Buffer(process.env.NAME);
+        server.send(message, 0, message.length, PORT,MCAST_ADDR);
+    }
 }

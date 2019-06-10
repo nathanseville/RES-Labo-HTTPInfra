@@ -17,9 +17,6 @@ do
     dynamicHosts+="$dynamicIP:$dynamicPort,"
 done
 
-echo 
-
-
 for i in {0..4}
 do
     staticName=$(docker run -d --name static-$i -e NAME=static-$i res/statichttp)
@@ -28,11 +25,12 @@ do
 done
 
 
-
-
-proxyName=$(docker run -d --name proxy -e DYNAMIC_APP=${dynamicHosts::-1} -e STATIC_APP=${staticHosts::-1} -p 8080:80 res/rp)
+proxyName=$(docker run -d --name proxy -p 8080:80 res/rp)
 
 proxyIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $proxyName)
+
+docker run -d --name proxy-manager -v /var/run/docker.sock:/var/run/docker.sock res/rpmanager
+
 
 echo "Infra UP"
 echo "Reverse proxy IP: $proxyIP"
